@@ -79,14 +79,12 @@
             <p>&copy;تمامی حقوق این محفوظ است ،2025 سایت موزیک تاپ</p>
         </footer>
     
-        </body>
-        
-    </html>
-    <!DOCTYPE html>
+        </body> 
+        <!DOCTYPE html>
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title> ورود به سایت موزیک تاپ</title>
+  <title>سیستم ثبت‌نام و ورود سایت موزیک</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
@@ -104,7 +102,7 @@
       background: #121212;
       padding: 30px;
       border-radius: 15px;
-      width: 320px;
+      width: 360px;
       text-align: center;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
@@ -157,78 +155,107 @@
 <body>
 
 <div class="container">
+
   <!-- فرم ورود -->
   <div id="loginForm">
-    <h2><i class="fa-solid fa-user"></i> ورود</h2>
-    <input type="text" id="username" placeholder="نام کاربری">
-    <input type="password" id="password" placeholder="رمز عبور">
+    <h2><i class="fa-solid fa-user-lock"></i> ورود</h2>
+    <input type="text" id="loginUsername" placeholder="نام کاربری">
+    <input type="password" id="loginPassword" placeholder="رمز عبور">
     <button class="btn" onclick="login()">ورود</button>
-    <span class="link" onclick="showForgot()">رمز را فراموش کرده‌اید؟</span>
+    <span class="link" onclick="showRegister()">حساب کاربری ندارید؟ ثبت‌نام کنید</span>
   </div>
 
-  <!-- فرم بازیابی رمز -->
-  <div id="forgotForm" class="hidden">
-    <h2><i class="fa-solid fa-unlock-keyhole"></i> بازیابی رمز</h2>
-    <input type="email" id="email" placeholder="ایمیل خود را وارد کنید">
-    <button class="btn" onclick="recover()">ارسال لینک بازیابی</button>
+  <!-- فرم ثبت‌نام -->
+  <div id="registerForm" class="hidden">
+    <h2><i class="fa-solid fa-user-plus"></i> ثبت‌نام</h2>
+    <input type="text" id="regUsername" placeholder="نام کاربری">
+    <input type="password" id="regPassword" placeholder="رمز عبور">
+    <button class="btn" onclick="register()">ثبت‌نام</button>
     <span class="link" onclick="showLogin()">بازگشت به ورود</span>
   </div>
 
-  <!-- صفحه بعد از ورود -->
+  <!-- صفحه خوش آمدگویی -->
   <div id="welcomePage" class="hidden">
     <h2>🎵 خوش آمدی <span id="userDisplay"></span></h2>
+    <p>شما وارد شدید، اگر مرورگر را ببندید باید دوباره لاگین کنید.</p>
     <button class="btn" onclick="logout()">خروج</button>
   </div>
 </div>
 
 <script>
-  function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
+  // بررسی وضعیت ورود هنگام بارگذاری صفحه
+  window.onload = function() {
+    const savedUser = sessionStorage.getItem("username");
+    if(savedUser) {
+      showWelcome(savedUser);
+    }
+  }
+
+  function register() {
+    const user = document.getElementById("regUsername").value;
+    const pass = document.getElementById("regPassword").value;
 
     if(user === "" || pass === "") {
       alert("لطفا نام کاربری و رمز عبور را وارد کنید");
       return;
     }
 
-    // شبیه‌سازی ورود موفق
-    document.getElementById("loginForm").classList.add("hidden");
-    document.getElementById("welcomePage").classList.remove("hidden");
-    document.getElementById("userDisplay").textContent = user;
+    // ذخیره کاربر در localStorage
+    let users = JSON.parse(localStorage.getItem("users")) || {};
+    if(users[user]) {
+      alert("این نام کاربری قبلاً ثبت شده است ❌");
+      return;
+    }
+    users[user] = pass;
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("ثبت‌نام موفقیت‌آمیز ✅ حالا وارد شوید");
+    showLogin();
+  }
+
+  function login() {
+    const user = document.getElementById("loginUsername").value;
+    const pass = document.getElementById("loginPassword").value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || {};
+
+    if(users[user] && users[user] === pass) {
+      sessionStorage.setItem("username", user);
+      showWelcome(user);
+    } else {
+      alert("❌ نام کاربری یا رمز عبور اشتباه است");
+    }
   }
 
   function logout() {
+    sessionStorage.removeItem("username");
     document.getElementById("welcomePage").classList.add("hidden");
     document.getElementById("loginForm").classList.remove("hidden");
-    document.getElementById("username").value = "";
-    document.getElementById("password").value = "";
+    document.getElementById("loginUsername").value = "";
+    document.getElementById("loginPassword").value = "";
   }
 
-  function showForgot() {
+  function showRegister() {
     document.getElementById("loginForm").classList.add("hidden");
-    document.getElementById("forgotForm").classList.remove("hidden");
+    document.getElementById("registerForm").classList.remove("hidden");
   }
 
   function showLogin() {
-    document.getElementById("forgotForm").classList.add("hidden");
+    document.getElementById("registerForm").classList.add("hidden");
     document.getElementById("loginForm").classList.remove("hidden");
   }
 
-  function recover() {
-    const email = document.getElementById("email").value;
-    if(email === "") {
-      alert("لطفا ایمیل را وارد کنید");
-      return;
-    }
-    alert("لینک بازیابی رمز به ایمیل " + email + " ارسال شد ✅");
-    showLogin();
+  function showWelcome(user) {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("registerForm").classList.add("hidden");
+    document.getElementById("welcomePage").classList.remove("hidden");
+    document.getElementById("userDisplay").textContent = user;
   }
 </script>
 
 </body>
 </html>
 
-    
 <style>
 
 body {
