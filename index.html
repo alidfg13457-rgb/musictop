@@ -82,6 +82,152 @@
         </body>
         
     </html>
+    <!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title> ورود به سایت موزیک تاپ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Vazirmatn", sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #121212;
+      padding: 30px;
+      border-radius: 15px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #1db954;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .btn {
+      background: #1db954;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #1ed760;
+    }
+
+    .link {
+      display: block;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #aaa;
+      cursor: pointer;
+    }
+    .link:hover {
+      color: #1db954;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- فرم ورود -->
+  <div id="loginForm">
+    <h2><i class="fa-solid fa-user"></i> ورود</h2>
+    <input type="text" id="username" placeholder="نام کاربری">
+    <input type="password" id="password" placeholder="رمز عبور">
+    <button class="btn" onclick="login()">ورود</button>
+    <span class="link" onclick="showForgot()">رمز را فراموش کرده‌اید؟</span>
+  </div>
+
+  <!-- فرم بازیابی رمز -->
+  <div id="forgotForm" class="hidden">
+    <h2><i class="fa-solid fa-unlock-keyhole"></i> بازیابی رمز</h2>
+    <input type="email" id="email" placeholder="ایمیل خود را وارد کنید">
+    <button class="btn" onclick="recover()">ارسال لینک بازیابی</button>
+    <span class="link" onclick="showLogin()">بازگشت به ورود</span>
+  </div>
+
+  <!-- صفحه بعد از ورود -->
+  <div id="welcomePage" class="hidden">
+    <h2>🎵 خوش آمدی <span id="userDisplay"></span></h2>
+    <button class="btn" onclick="logout()">خروج</button>
+  </div>
+</div>
+
+<script>
+  function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+
+    if(user === "" || pass === "") {
+      alert("لطفا نام کاربری و رمز عبور را وارد کنید");
+      return;
+    }
+
+    // شبیه‌سازی ورود موفق
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("welcomePage").classList.remove("hidden");
+    document.getElementById("userDisplay").textContent = user;
+  }
+
+  function logout() {
+    document.getElementById("welcomePage").classList.add("hidden");
+    document.getElementById("loginForm").classList.remove("hidden");
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+  }
+
+  function showForgot() {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("forgotForm").classList.remove("hidden");
+  }
+
+  function showLogin() {
+    document.getElementById("forgotForm").classList.add("hidden");
+    document.getElementById("loginForm").classList.remove("hidden");
+  }
+
+  function recover() {
+    const email = document.getElementById("email").value;
+    if(email === "") {
+      alert("لطفا ایمیل را وارد کنید");
+      return;
+    }
+    alert("لینک بازیابی رمز به ایمیل " + email + " ارسال شد ✅");
+    showLogin();
+  }
+</script>
+
+</body>
+</html>
+
     
 <style>
 
@@ -151,6 +297,7 @@ audio, video {
 
 </body>
 </html>
+
 
 
 
